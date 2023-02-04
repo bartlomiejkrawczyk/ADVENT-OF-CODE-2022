@@ -10,3 +10,15 @@ fun readLinesFromFile(file: String): Stream<String> {
 fun readLineFromFile(file: String): String {
 	return readLinesFromFile(file).findFirst().orElse(StringUtils.EMPTY)
 }
+
+fun transposeMatrix(matrix: List<List<Int>>): List<List<Int>> {
+	val transposition = Array(matrix[0].size) { IntArray(matrix.size) }
+
+	for (y in matrix.indices) {
+		for (x in 0 until matrix[0].size) {
+			transposition[x][y] = matrix[y][x]
+		}
+	}
+
+	return transposition.toList().map { it.toList() }
+}

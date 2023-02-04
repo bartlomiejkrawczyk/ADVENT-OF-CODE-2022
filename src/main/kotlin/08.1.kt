@@ -15,24 +15,6 @@ private fun parseInput(lines: Stream<String>): List<List<Int>> {
 	}.toList()
 }
 
-private fun isNotVisible(forestX: Forest, forestY: Forest, treeX: Int, treeY: Int): Boolean {
-	if (treeX <= 0 || treeY <= 0 || treeX >= forestX.size - 1 || treeY >= forestY.size - 1) {
-		return false
-	}
-
-	val treeSize = forestY[treeY][treeX]
-
-	if (treeSize > forestY[treeY].subList(0, treeX).max() || treeSize > forestY[treeY].subList(treeX + 1, forestX.size).max()) {
-		return false
-	}
-
-	if (treeSize > forestX[treeX].subList(0, treeY).max() || treeSize > forestX[treeX].subList(treeY + 1, forestX.size).max()) {
-		return false
-	}
-
-	return true
-}
-
 private fun calculateVisible(forest: Forest): Int {
 	var count = 0
 	val forestY = transposeMatrix(forest)
@@ -46,15 +28,19 @@ private fun calculateVisible(forest: Forest): Int {
 	return count
 }
 
-private fun transposeMatrix(matrix: List<List<Int>>): List<List<Int>> {
-	val transposition = Array(matrix[0].size) { IntArray(matrix.size) }
-
-	for (y in matrix.indices) {
-		for (x in 0 until matrix[0].size) {
-			transposition[x][y] = matrix[y][x]
-		}
+private fun isNotVisible(forestX: Forest, forestY: Forest, treeX: Int, treeY: Int): Boolean {
+	if (treeX <= 0 || treeY <= 0 || treeX >= forestX.size - 1 || treeY >= forestY.size - 1) {
+		return false
 	}
-
-	return transposition.toList().map { it.toList() }
+	val treeSize = forestY[treeY][treeX]
+	return !treeLines(forestX, forestY, treeX, treeY).stream().anyMatch { it.max() < treeSize }
 }
 
+private fun treeLines(forestX: Forest, forestY: Forest, treeX: Int, treeY: Int): List<List<Int>> {
+	return listOf(
+		forestY[treeY].subList(0, treeX),
+		forestY[treeY].subList(treeX + 1, forestX.size),
+		forestX[treeX].subList(0, treeY),
+		forestX[treeX].subList(treeY + 1, forestX.size),
+	)
+}

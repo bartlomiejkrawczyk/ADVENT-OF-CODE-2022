@@ -13,14 +13,24 @@ private fun parseInput(lines: Stream<String>): List<List<Int>> {
 	}.toList()
 }
 
+private fun calculateVisibility(forest: Forest): Int {
+	var maxValue = 0
+	val forestX = transposeMatrix(forest)
+	for (y in forest.indices) {
+		for (x in 0 until forest[0].size) {
+			maxValue = maxOf(maxValue, calculateVisibilityScore(forestX, forest, x, y))
+		}
+	}
+	return maxValue
+}
+
 private fun calculateVisibilityScore(forestX: Forest, forestY: Forest, treeX: Int, treeY: Int): Int {
 	val treeSize = forestY[treeY][treeX]
 
 	var visibility = 1
-	visibility *= calculateVisibleTreeInLine(forestY[treeY].subList(0, treeX).reversed(), treeSize)
-	visibility *= calculateVisibleTreeInLine(forestY[treeY].subList(treeX + 1, forestX.size), treeSize)
-	visibility *= calculateVisibleTreeInLine(forestX[treeX].subList(0, treeY).reversed(), treeSize)
-	visibility *= calculateVisibleTreeInLine(forestX[treeX].subList(treeY + 1, forestY.size), treeSize)
+	for (direction in treeLines(forestX, forestY, treeX, treeY)) {
+		visibility *= calculateVisibleTreeInLine(direction, treeSize)
+	}
 
 	return visibility
 }
@@ -36,26 +46,11 @@ private fun calculateVisibleTreeInLine(treeLine: List<Int>, treeSize: Int): Int 
 	return current
 }
 
-private fun calculateVisibility(forest: Forest): Int {
-	var maxValue = 0
-	val forestX = transposeMatrix(forest)
-	for (y in forest.indices) {
-		for (x in 0 until forest[0].size) {
-			maxValue = maxOf(maxValue, calculateVisibilityScore(forestX, forest, x, y))
-		}
-	}
-	return maxValue
+private fun treeLines(forestX: Forest, forestY: Forest, treeX: Int, treeY: Int): List<List<Int>> {
+	return listOf(
+		forestY[treeY].subList(0, treeX).reversed(),
+		forestY[treeY].subList(treeX + 1, forestX.size),
+		forestX[treeX].subList(0, treeY).reversed(),
+		forestX[treeX].subList(treeY + 1, forestX.size),
+	)
 }
-
-private fun transposeMatrix(matrix: List<List<Int>>): List<List<Int>> {
-	val transposition = Array(matrix[0].size) { IntArray(matrix.size) }
-
-	for (y in matrix.indices) {
-		for (x in 0 until matrix[0].size) {
-			transposition[x][y] = matrix[y][x]
-		}
-	}
-
-	return transposition.toList().map { it.toList() }
-}
-
