@@ -1,16 +1,13 @@
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("04.txt")?.bufferedReader()
+	val lines: Stream<String> = readLinesFromFile("04.txt")
+	val input: Flux<Pair<Range, Range>> = parseInput(lines)
+	val result: Mono<Int> = sumFullyContained(input)
+	println(result.blockOptional().orElse(0))
 
-	reader?.let {
-		val input: Flux<Pair<Range, Range>> = parseInput(reader.lines())
-		val result: Mono<Int> = sumFullyContained(input)
-		println(result.blockOptional().orElse(0))
-	}
 }
 
 typealias Range = Pair<Int, Int>

@@ -1,16 +1,12 @@
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("04.txt")?.bufferedReader()
-
-	reader?.let {
-		val input: Flux<Pair<Range, Range>> = parseInput(reader.lines())
-		val result: Mono<Int> = sumFullyContained(input)
-		println(result.blockOptional().orElse(0))
-	}
+	val lines: Stream<String> = readLinesFromFile("04.txt")
+	val input: Flux<Pair<Range, Range>> = parseInput(lines)
+	val result: Mono<Int> = sumOverlapping(input)
+	println(result.blockOptional().orElse(0))
 }
 
 private fun parseInput(lines: Stream<String>): Flux<Pair<Range, Range>> {
@@ -31,7 +27,7 @@ private fun Range.overlaps(that: Range): Boolean {
 			|| (this.first <= that.second && that.second <= this.second)
 }
 
-private fun sumFullyContained(rangePairs: Flux<Pair<Range, Range>>): Mono<Int> {
+private fun sumOverlapping(rangePairs: Flux<Pair<Range, Range>>): Mono<Int> {
 	return rangePairs
 		.filter { (first, second) ->
 			return@filter first.overlaps(second) || second.overlaps(first)

@@ -1,16 +1,12 @@
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("03.txt")?.bufferedReader()
+	val lines: Stream<String> = readLinesFromFile("03.txt")
+	val input: Stream<Pair<Set<Char>, Set<Char>>> = parseInput(lines)
+	val result: Int = calculateTotalPriorities(input)
+	println(result)
 
-	reader?.let {
-		val input: Stream<Pair<Set<Char>, Set<Char>>> = parseInput(reader.lines())
-		val result: Int = calculateTotalPriorities(input)
-		println(result)
-	}
 }
-
 
 private fun parseInput(lines: Stream<String>): Stream<Pair<Set<Char>, Set<Char>>> {
 	return lines.map {

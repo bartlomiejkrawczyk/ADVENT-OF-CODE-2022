@@ -1,16 +1,12 @@
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("03.txt")?.bufferedReader()
-
-	reader?.let {
-		val input: Flux<List<Set<Char>>> = parseInput(reader.lines())
-		val result: Mono<Int> = calculateTotalPriorities(input)
-		println(result.blockOptional().orElse(0))
-	}
+	val lines: Stream<String> = readLinesFromFile("03.txt")
+	val input: Flux<List<Set<Char>>> = parseInput(lines)
+	val result: Mono<Int> = calculateTotalPriorities(input)
+	println(result.blockOptional().orElse(0))
 }
 
 

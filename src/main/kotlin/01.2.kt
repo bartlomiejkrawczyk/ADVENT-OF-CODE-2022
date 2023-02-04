@@ -1,13 +1,9 @@
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("01.txt")?.bufferedReader()
-
-	reader?.let {
-		val result: Int = calculateMaxCaloriesCarriedByTopElves(it.lines())
-		println(result)
-	}
+	val lines: Stream<String> = readLinesFromFile("01.txt")
+	val result: Int = calculateMaxCaloriesCarriedByTopElves(lines)
+	println(result)
 }
 
 

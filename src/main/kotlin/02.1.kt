@@ -1,14 +1,10 @@
-import java.io.BufferedReader
 import java.util.stream.Stream
 
 fun main() {
-	val reader: BufferedReader? = object {}.javaClass.getResourceAsStream("02.txt")?.bufferedReader()
-
-	reader?.let {
-		val input: Stream<Pair<RockPaperScissors, RockPaperScissors>> = prepareInput(it.lines())
-		val result: Int = calculateScore(input)
-		println(result)
-	}
+	val lines: Stream<String> = readLinesFromFile("02.txt")
+	val input: Stream<Pair<RockPaperScissors, RockPaperScissors>> = prepareInput(lines)
+	val result: Int = calculateScore(input)
+	println(result)
 }
 
 enum class RockPaperScissors(val score: Int) {
