@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("io.projectreactor:reactor-core:3.5.2")
+    implementation("io.vavr:vavr-kotlin:0.10.2")
 
     testImplementation(kotlin("test"))
 }
