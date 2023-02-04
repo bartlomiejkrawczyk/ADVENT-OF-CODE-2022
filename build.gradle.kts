@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    implementation("io.projectreactor:reactor-core:3.5.2")
+
     testImplementation(kotlin("test"))
 }
 
